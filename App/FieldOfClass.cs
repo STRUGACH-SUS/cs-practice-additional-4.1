@@ -1,5 +1,7 @@
 namespace App;
-
+/// <summary>
+/// Через него загружаю данные для полей и конструктора по типу практик с шахматами.
+/// </summary>
 public class FieldOfClass
 {
     public string Name { get; set; }
@@ -23,8 +25,8 @@ public class FieldOfClass
         
         Access = content[2].ToLower().Trim() switch
         {
-            "ro" => "get",
-            "rw" => "get, set",
+            "ro" => "get;",
+            "rw" => "get; set;",
             _ => throw new Exception("Unknown field access"),
         };
     }

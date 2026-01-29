@@ -1,0 +1,4 @@
+#Name;Type;Access;
+_Id;Int;RO;
+_Health;Real;RW;
+_Alive;Bool;RO;

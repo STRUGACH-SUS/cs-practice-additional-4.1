@@ -1,28 +1,37 @@
 using System.Text;
 
 namespace App;
-
+/// <summary>
+/// Создает код для класса из его описания и загружает его в файл.
+/// </summary>
 public class CreatorClass
 {
+    /// <summary>
+    /// Генерация и загрузка кода.
+    /// </summary>
     public static void Create(IEnumerable<FieldOfClass> fields, string path)
     {
-        var text = new StringBuilder();
-        text.AppendLine($"public class {Path.GetFileNameWithoutExtension(path)}");
-        text.AppendLine("{");
+        var code = new StringBuilder();
+        code.AppendLine($"public class {Path.GetFileNameWithoutExtension(path)}");
+        code.AppendLine("{");
         foreach (var field in fields)
         {
-            text.AppendLine($$"""   public {{field.Type}} _{{field.Name}} {{{field.Access}}}""");
+            code.AppendLine($$"""    public {{field.Type}} _{{field.Name}} {{{field.Access}}}""");
         }
-        text.AppendLine($"\tpublic {Path.GetFileNameWithoutExtension(path)}({fields.Select(x => $"{x.Type} {x.Name}").ToString()})");//
-        text.AppendLine("\t{");
+        code.AppendLine(String.Empty);
+        code.Append($"\tpublic {Path.GetFileNameWithoutExtension(path)} (");
+        code.AppendJoin(',', fields.Select(x => $"{x.Type} {x.Name}"));
+        code.Append(")");
+        code.AppendLine(String.Empty);
+        code.AppendLine("\t{");
 
         foreach (var field in fields)
         {
-            text.AppendLine($"\t\t\t_{field.Name} = {field.Name};");
+            code.AppendLine($"\t\t\t_{field.Name} = {field.Name};");
         }
-        text.AppendLine("\t}");
-        text.AppendLine("}");
+        code.AppendLine("\t}");
+        code.AppendLine("}");
 
-        File.AppendAllText(Path.ChangeExtension(path, ".cs"), text.ToString());
+        File.AppendAllText(Path.ChangeExtension(path, ".cs"), code.ToString());
     }
 }

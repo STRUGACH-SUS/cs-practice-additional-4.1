@@ -1,7 +1,13 @@
+using System.Reflection;
 namespace App;
-
+/// <summary>
+/// Приводит к нужному формату для работы.
+/// </summary>
 public class ConverterOfData
 {
+    /// <summary>
+    /// Из описания к значениям для кода.
+    /// </summary>
     public static IEnumerable<FieldOfClass> ConvertDescriptionToClassWorkpiece(string [] contains)
     {
         try
@@ -19,9 +25,18 @@ public class ConverterOfData
             throw;
         }
     }
-
-    public static void ConvertObjectToDescription()
+    /// <summary>
+    /// Из значений в коде к описанию.
+    /// </summary>
+    public static void ConvertObjectToDescription(string path)
     {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+                
+        string className = Path.GetFileNameWithoutExtension(path);
+                
+        Type type = assembly.GetTypes().FirstOrDefault(t => t.Name == className);
         
+        var props = type.GetProperties().Select(x => $"{x.Name};{x.PropertyType};{x.CanRead} {x.CanWrite}").ToArray();
+        CreatorDescription.Create(props, path);
     }
 }
